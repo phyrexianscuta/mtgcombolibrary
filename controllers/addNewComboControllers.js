@@ -1,4 +1,4 @@
-var JSONDB = require('updateJSONDB');
+var JSONDB = require('../public/javascripts/updateJSONDB');
 var fs = require('fs');
 var mtg = require('mtgsdk');
 var url = require('url');
