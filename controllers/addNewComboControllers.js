@@ -7,7 +7,7 @@ function createResponse(res){
 	fs.readFile("\public/FileWithNames.json" ,'utf8',function(err,data){
 		if (err) throw err;
 		var obj = JSON.parse(data);
-		res.render('addNewCombo', {title:"MTG Combo Library", cards: obj, numeroCartas: obj.length})
+		res.render('addnewcombo', {title:"MTG Combo Library", cards: obj, numeroCartas: obj.length})
 	});
 }
 
