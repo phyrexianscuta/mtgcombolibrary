@@ -24,9 +24,10 @@ function updateListWithNames(callback,response){
 		var obj = JSON.parse(data);
 		for(var x in obj){
 			if( obj[x].type != "Scheme" && obj[x].printings.indexOf("UST") ==-1 && obj[x].printings.indexOf("UNH") ==-1 && obj[x].printings.indexOf("UGL") ==-1 && obj[x].printings.indexOf("VAN") ==-1 ){
-				listCards.push({name: x});
+				listCards.push(x);
 			}
 		}
+		listCards.sort();
 		var json = JSON.stringify(listCards);
 		fs.writeFile('\public/FileWithNames.json', json,function(err){
 			console.log("list created!");
@@ -34,7 +35,7 @@ function updateListWithNames(callback,response){
 		});
 	});
 }
-
+/*
 function updateHTMLSelectOption(callback,response){
 	fs.readFile("\public/FileWithNames.json" ,'utf8',function(err,data){
 		var obj = JSON.parse(data);
@@ -48,36 +49,21 @@ function updateHTMLSelectOption(callback,response){
 		});
 	});
 }
+*/
 
-/*
-function updateListWithNames(callback,response){
-	fs.readFile("\public/AllCards-x.json" ,'utf8',function(err,data){
-		console.log("Checking if list with names already exists...");
-		fs.exists('\public/FileWithNames.json', function(exists){
-			if(exists){
-				console.log("It already exists...");
-				callback(response);
-			}
-			else{
-				console.log("Creating list of cards...");
-				if (err) throw err;
-				var listCards = [];
-				var obj = JSON.parse(data);
-				for(var x in obj){
-					if( obj[x].type != "Scheme" && obj[x].printings.indexOf("UST") ==-1 && obj[x].printings.indexOf("UNH") ==-1 && obj[x].printings.indexOf("UGL") ==-1 && obj[x].printings.indexOf("VAN") ==-1 ){
-						listCards.push({name: x});
-					}
-				}
-				var json = JSON.stringify(listCards);
-				fs.writeFile('\public/FileWithNames.json', json,function(err){
-					console.log("list created!");
-					callback(response);
-				});
-			}
+function updateHTMLSelectOption(callback,response){
+	fs.readFile("\public/FileWithNames.json" ,'utf8',function(err,data){
+		var obj = JSON.parse(data);
+		var string = "<select>";
+		for (var i=0; i< obj.length; i++) {
+			string += "<option name='"+obj[i]+"'>"+obj[i] + "</option>"
+		}		
+		string += "</select>";
+		fs.writeFile('\public/htmlSelectOption.txt',string,function(err){
+			callback(response);
 		});
 	});
 }
-*/
 
 function checkIfUpdateIsNeeded(callback,response,data){
 	fs.readFile('\public/currentVersion.txt',function(err,getCurrentVersionFile){
