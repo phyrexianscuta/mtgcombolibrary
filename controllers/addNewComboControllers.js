@@ -3,12 +3,18 @@ var fs = require('fs');
 var mtg = require('mtgsdk');
 var url = require('url');
 
+/*
 function createResponse(res){
 	fs.readFile("\public/FileWithNames.json" ,'utf8',function(err,data){
 		if (err) throw err;
 		var obj = JSON.parse(data);
 		res.render('addnewcombo', {title:"MTG Combo Library", cards: obj, numeroCartas: obj.length})
 	});
+}
+*/
+
+function createResponse(res){
+	res.render('addnewcombo', {title:"MTG Combo Library"});
 }
 
 function addCardOption(res){

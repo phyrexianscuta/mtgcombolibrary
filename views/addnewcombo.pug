@@ -55,7 +55,7 @@ html(lang='en')
 				margin-bottom:5px;
 			}
 			.comboName{
-				max-width: 26%;
+				width: 125px;
 			}
 			.preview{
 				background-color: grey;
@@ -96,14 +96,10 @@ html(lang='en')
 								option storm
 								option graveyard
 					h2 Add cards:
-					.row
+					.row#row1
 						.col-xs-3
-							h4#CardNum1 Card #1: 
-						.col-xs-9
-							select.cardsSelection(name='state',id="id0")
-								- for (var i=0; i< numeroCartas; i++) {
-								option(name=locals.cards[i]["name"]) #{locals.cards[i]["name"]}
-								- }
+							h4 Card #1: 
+						.col-xs-9#newCardSelectionLocation
 				.col-sm-4.col-lg-5
 					.preview
 						img#targetImage(alt='')
@@ -120,36 +116,56 @@ html(lang='en')
 		// Include all compiled plugins (below), or include individual files as needed
 		script(src='/js/bootstrap.js')
 		script.
+			var maximumNumberOfCardsPerCombo = 7;
 			var numCards = 0;
+			function updatePicture(response){
+				$("#targetImage").attr("src",response);
+			}
+			function addCard(response){
+				numCards++;
+				var $select = $("<select>").html(response);
+				$select.attr("id","id"+numCards).attr("class","cardsSelection");
+				if(numCards==1){
+					$("#newCardSelectionLocation").append($select);
+				}
+				else{
+					var newRow = $("<div class='row' id = 'row"+numCards+"'> </div>")
+					newRow.append("<div class='col-xs-3'> <h4 >Card #"+numCards+":</h4> </div>")
+					var secondColumn = $("<div class='col-xs-9'> </div>");
+					secondColumn.append($select)
+					newRow.append(secondColumn);
+					var prevCard = numCards -1;
+					$("#row"+prevCard).after(newRow);
+				}
+				$("#id"+numCards).select2({minimumInputLength: 2}).on('select2:select', function(e){
+					var name = e.params.data["text"];
+					$.get(window.location.href,"getPicture:"+name,updatePicture,"text");
+				});
+			}/*
+			function addFirstCard(response){
+				numCards++;
+				var $select = $("<select>").html(response);
+				$select.attr("id","id0").attr("class","cardsSelection");
+				$("#newCardSelectionLocation").append($select);
+				$("#id0").select2({minimumInputLength: 2}).on('select2:select', function(e){
+					var name = e.params.data["text"];
+					$.get(window.location.href,"getPicture:"+name,updatePicture,"text");
+				});
+			}*/
+			$.get(window.location.href,"addCard",addCard,"text")
 			$(document).ready(function() {
-				$('#id0').select2({minimumInputLength: 2});
 				$('.typeOfComboSelection').select2();
 				$('.cardsSelection').on('select2:select', function(e){
 					var name = e.params.data["text"];
 					$.get(window.location.href,"getPicture:"+name,updatePicture,"text");
 				});
-				function updatePicture(response){
-					$("#targetImage").attr("src",response);
-					}
+
 				$('.addCard').on('click',function(){
-					if(numCards <7){
+					if(numCards <maximumNumberOfCardsPerCombo){
 						$.get(window.location.href,"addCard",addCard,"text")
 						}
 					else{
-						alert("only 8 cards per combo please.	");
+						alert("only 8 cards per combo please.");
 						}
 				})
-				function addCard(response){
-					numCards++;
-					var $select = $("<select>").html(response);
-					$select.attr("id","id"+numCards).attr("class","cardsSelection")
-					var prevCard = numCards -1;
-					var nextCard = numCards + 1;
-					$("#id"+prevCard).after("<br>").after($select);
-					$("#CardNum"+numCards).after("<h4 id='CardNum"+nextCard+"' >Card #"+nextCard+":</h4>");
-					$("#id"+numCards).select2({minimumInputLength: 2}).on('select2:select', function(e){
-						var name = e.params.data["text"];
-						$.get(window.location.href,"getPicture:"+name,updatePicture,"text");
-					});
-				}
 			});
