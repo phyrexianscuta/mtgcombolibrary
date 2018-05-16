@@ -35,21 +35,6 @@ function updateListWithNames(callback,response){
 		});
 	});
 }
-/*
-function updateHTMLSelectOption(callback,response){
-	fs.readFile("\public/FileWithNames.json" ,'utf8',function(err,data){
-		var obj = JSON.parse(data);
-		var string = "<select>";
-		for (var i=0; i< obj.length; i++) {
-			string += "<option name='"+obj[i]["name"]+"'>"+obj[i]["name"] + "</option>"
-		}		
-		string += "</select>";
-		fs.writeFile('\public/htmlSelectOption.txt',string,function(err){
-			callback(response);
-		});
-	});
-}
-*/
 
 function updateHTMLSelectOption(callback,response){
 	fs.readFile("\public/FileWithNames.json" ,'utf8',function(err,data){
