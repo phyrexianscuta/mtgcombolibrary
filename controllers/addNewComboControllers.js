@@ -18,10 +18,14 @@ exports.handleGetRequest = function(req, res, next) {
 	if(req.method==="GET" && url.parse(req.url).query != null && decodeURI(url.parse(req.url).query).slice(0,10)==="getPicture"){
 		var pictureRequestArray=[];	
 		var name = decodeURI(url.parse(req.url).query).slice(11);
+		console.log("name: "+name);
 		mtg.card.all({ name: name}).on('data',function(card){
-			pictureRequestArray.push(card.imageUrl);
+			if(card.name==name && card.imageUrl != undefined){
+				pictureRequestArray.push(card.imageUrl);
+			}
 		});
 		mtg.card.all({ name: name}).on('end',function(done){
+			console.log(pictureRequestArray);
 			res.send(pictureRequestArray[pictureRequestArray.length -1]);
 		});
 	}
